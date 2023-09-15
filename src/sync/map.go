@@ -133,7 +133,7 @@ func (e *entry) load() (value any, ok bool) {
 	return *(*any)(p), true
 }
 
-// Store sets the value for a key.
+// 保存一个 key,value 到 map 中
 func (m *Map) Store(key, value any) {
 	read, _ := m.read.Load().(readOnly)
 	if e, ok := read.m[key]; ok && e.tryStore(&value) {
