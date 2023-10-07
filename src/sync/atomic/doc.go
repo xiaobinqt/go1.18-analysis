@@ -123,6 +123,7 @@ func LoadUint64(addr *uint64) (val uint64)
 func LoadUintptr(addr *uintptr) (val uintptr)
 
 // LoadPointer atomically loads *addr.
+// 获取一个指针的值,这个值其实还是一个指针
 func LoadPointer(addr *unsafe.Pointer) (val unsafe.Pointer)
 
 // StoreInt32 atomically stores val into *addr.

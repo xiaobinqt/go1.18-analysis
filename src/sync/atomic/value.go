@@ -26,6 +26,11 @@ type ifaceWords struct {
 // Load returns the value set by the most recent Store.
 // It returns nil if there has been no call to Store for this Value.
 func (v *Value) Load() (val any) {
+	// 1. `unsafe.Pointer(v)`：首先，将变量 `v` 转换为 `unsafe.Pointer` 类型。
+	// 这个操作将一个值的地址转换为一个不带类型信息的指针。
+	// 2. `(*ifaceWords)(unsafe.Pointer(v))`：
+	// 将 `unsafe.Pointer` 再次转换为 `*ifaceWords` 类型的指针。
+	// 这个操作将 `v` 的地址重新解释为一个 `*ifaceWords` 类型的指针。
 	vp := (*ifaceWords)(unsafe.Pointer(v))
 	typ := LoadPointer(&vp.typ)
 	if typ == nil || typ == unsafe.Pointer(&firstStoreInProgress) {
@@ -190,5 +195,10 @@ func (v *Value) CompareAndSwap(old, new any) (swapped bool) {
 }
 
 // Disable/enable preemption, implemented in runtime.
+
+// 这个函数的主要作用是在 Goroutine 执行期间，防止其被 Go 语言的调度器移动到其他线程上执行。
+// 在 Go 语言的并发模型中，Goroutine 可以在多个线程之间切换执行，这是 Go 调度器的工作。
+// 然而，有些情况下，你可能希望将某个 Goroutine 固定在特定的线程上执行，以控制线程亲和性或者避免一些性能问题。
+// 这就是 runtime_procPin() 函数的用途。
 func runtime_procPin()
 func runtime_procUnpin()
